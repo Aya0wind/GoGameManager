@@ -1,0 +1,23 @@
+- name: '更换地图'
+  description: '更换服务器地图为指定地图（战役模式）'
+  params:
+  - '地图名称'
+  command: 'map $1'
+
+- name: '更换地图（写实模式）'
+  description: '更换服务器地图为指定地图（写实模式）'
+  params:
+    - '地图名称'
+  command: 'map $1 realism'
+
+- name: '给予玩家权限'
+  description: '给予玩家指定权限'
+  params:
+    - '权限码'
+  command: 'map $1 realism'
+
+- name: '封禁玩家'
+  description: '封禁指定玩家'
+  params:
+    - '玩家名称'
+  command: 'map $1 realism'

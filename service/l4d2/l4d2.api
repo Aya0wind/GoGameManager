@@ -1,0 +1,257 @@
+type ServerInfo {
+	Host    string `json:"host"`
+	Version string `json:"version"`
+	Listen  string `json:"listen"`
+	Public  string `json:"public"`
+	Os      string `json:"os"`
+	Map     string `json:"map"`
+	Player  string `json:"player"`
+}
+
+type MapFile {
+	Id        int64  `json:"id"`
+	FileName  string `json:"fileName"`
+	GroupID   int64  `json:"groupId"`
+	CreatedAt int64  `json:"createdAt"`
+	UpdatedAt int64  `json:"updatedAt"`
+}
+
+type MapGroup {
+	Id           int64  `json:"id"`
+	Name         string `json:"name"`
+	StartName    string `json:"startName"`
+	LastPlayTime int64  `json:"lastPlayTime"`
+	CreatedAt    int64  `json:"createdAt"`
+	UpdatedAt    int64  `json:"updatedAt"`
+}
+
+type User {
+	Id       int64  `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Right    int    `json:"right"`
+}
+
+type Plugin {
+	ID          int64  `json:"id"`
+	FileName    string `json:"fileName"`
+	Description string `json:"description"`
+	Enabled     bool   `json:"enabled"`
+}
+
+type CommandTemplate {
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Params      []string `json:"params"`
+	Command     string   `json:"command"`
+}
+
+type (
+	GetServerStatusRequest {
+	}
+	GetServerStatusResponse {
+		Code int        `json:"code"`
+		Msg  string     `json:"msg"`
+		Data ServerInfo `json:"data"`
+	}
+
+	GetServerPluginsRequest {
+	}
+	GetServerPluginsResponse {
+		Code int      `json:"code"`
+		Msg  string   `json:"msg"`
+		Data []Plugin `json:"data"`
+	}
+
+	GetMapGroupRequest {
+	}
+	GetMapGroupResponse {
+		Code int        `json:"code"`
+		Msg  string     `json:"msg"`
+		Data []MapGroup `json:"data"`
+	}
+
+	GetMapGroupByIDRequest {
+		ID int64 `path:"id"`
+	}
+	GetMapGroupByIDResponse {
+		Code int       `json:"code"`
+		Msg  string    `json:"msg"`
+		Data *MapGroup `json:"data"`
+	}
+
+	GetMapFilesByGroupIDRequest {
+		ID int64 `path:"id"`
+	}
+
+	GetMapFilesByGroupIDResponse {
+		Code int       `json:"code"`
+		Msg  string    `json:"msg"`
+		Data []MapFile `json:"data"`
+	}
+
+	DeleteMapGroupByIDRequest {
+		ID int64 `path:"id"`
+	}
+	DeleteMapGroupByIDResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+
+	UploadMapFileRequest {
+	}
+	UploadMapFileResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+
+	UploadMapFileNoVerifyRequest {
+	}
+	UploadMapFileNoVerifyResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+
+	ExecuteCommandRequest {
+		Command string `json:"command"`
+	}
+	ExecuteCommandResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Data string `json:"data"`
+	}
+
+	EnablePluginRequest {
+		PluginIDs []int64 `json:"plugin_ids"`
+	}
+	EnablePluginResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+
+	DisablePluginRequest {
+		PluginIDs []int64 `json:"plugin_ids"`
+	}
+	DisablePluginResponse {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}
+
+	GetCommandTemplateReqeust {
+	}
+	GetCommandTemplateResponse {
+		Code int               `json:"code"`
+		Msg  string            `json:"msg"`
+		Data []CommandTemplate `json:"data"`
+	}
+)
+
+@server(
+	group : admin
+	jwt : AdminAuth
+)
+service l4d2 {
+	@doc(
+		summary : "获取服务器状态"
+	)
+	@handler GetServerStatus
+	get /api/admin/server/status (GetServerStatusRequest) returns (GetServerStatusResponse)
+	
+	@doc(
+		summary : "获取服务器插件"
+	)
+	@handler GetServerPlugins
+	get /api/admin/server/plugins (GetServerPluginsRequest) returns (GetServerPluginsResponse)
+	
+	@doc(
+		summary : "获取所有服务器地图组"
+	)
+	@handler GetMapGroup
+	get /api/admin/map/group (GetMapGroupRequest) returns (GetMapGroupResponse)
+	
+	@doc(
+		summary : "根据ID获取服务器地图组"
+	)
+	@handler GetMapGroupByID
+	get /api/admin/map/group/:id (GetMapGroupByIDRequest) returns (GetMapGroupByIDResponse)
+	
+	@doc(
+		summary : "根据ID删除服务器地图组"
+	)
+	@handler DeleteMapGroupByID
+	delete /api/admin/map/group/:id (DeleteMapGroupByIDRequest) returns (DeleteMapGroupByIDResponse)
+	
+	@doc(
+		summary : "根据组ID获取地图文件信息"
+	)
+	@handler GetMapFilesByGroupID
+	get /api/admin/map/file/:id (GetMapFilesByGroupIDRequest) returns (GetMapFilesByGroupIDResponse)
+	
+	@doc(
+		summary : "上传地图文件（带验证）"
+	)
+	@handler UploadMapFile
+	post /api/admin/map/upload/verify (UploadMapFileRequest) returns (UploadMapFileResponse)
+	
+	@doc(
+		summary : "上传地图文件（不带验证）"
+	)
+	@handler UploadMapFileNoVerify
+	post /api/admin/map/upload (UploadMapFileNoVerifyRequest) returns (UploadMapFileNoVerifyResponse)
+	
+	@doc(
+		summary : "执行命令"
+	)
+	@handler ExecuteCommand
+	post /api/admin/command/exec (ExecuteCommandRequest) returns (ExecuteCommandResponse)
+	
+	@doc(
+		summary : "启用插件"
+	)
+	@handler EnablePlugin
+	post /api/admin/plugin/enable (EnablePluginRequest) returns (EnablePluginResponse)
+	
+	@doc(
+		summary : "禁用插件"
+	)
+	@handler DisablePlugin
+	post /api/admin/plugin/disable (DisablePluginRequest) returns (DisablePluginResponse)
+	
+	@doc(
+		summary : "获取命令模板"
+	)
+	@handler GetCommandTemplates
+	get /api/admin/command/template (GetCommandTemplateReqeust) returns (GetCommandTemplateResponse)
+	
+}
+
+type (
+	LoginReplyData {
+		Id           int64  `json:"id"`
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+
+	LoginReq {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	LoginReply {
+		Code int             `json:"code"`
+		Msg  string          `json:"msg"`
+		Data *LoginReplyData `json:"data,optional"`
+	}
+)
+
+@server(
+	group : user
+)
+service l4d2 {
+	@doc(
+		summary : "登录"
+	)
+	@handler login
+	post /user/login (LoginReq) returns (LoginReply)
+}
