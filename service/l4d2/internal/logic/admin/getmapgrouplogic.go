@@ -35,8 +35,7 @@ func (l *GetMapGroupLogic) GetMapGroup(req types.GetMapGroupRequest) (resp *type
 		err = nil
 		return
 	}
-	var MapGroups []types.MapGroup
-
+	MapGroups := make([]types.MapGroup, 0)
 	for _, mapGroup := range mapGroups {
 		l.Logger.Info(mapGroup)
 		var data types.MapGroup

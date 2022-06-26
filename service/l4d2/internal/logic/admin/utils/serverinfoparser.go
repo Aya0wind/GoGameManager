@@ -1,4 +1,4 @@
-package impl
+package utils
 
 import (
 	"l4d2/service/l4d2/internal/types"

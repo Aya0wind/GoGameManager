@@ -103,7 +103,7 @@ func ParseVpkMapFileInfo(path string) (info []VpkInfo, err error) {
 	}()
 	mission := (*vdf)["mission"]
 	modes := (*mission.(*VdfNode))["modes"]
-	name := (*mission.(*VdfNode))["FileName"].(string)
+	name := (*mission.(*VdfNode))["Name"].(string)
 	displayTitle := (*mission.(*VdfNode))["DisplayTitle"].(string)
 	coop := (*modes.(*VdfNode))["coop"]
 	coopMap := coop.(*VdfNode)

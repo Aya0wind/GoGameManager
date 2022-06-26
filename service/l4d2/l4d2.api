@@ -33,8 +33,7 @@ type User {
 }
 
 type Plugin {
-	ID          int64  `json:"id"`
-	FileName    string `json:"fileName"`
+	Name        string `json:"name"`
 	Description string `json:"description"`
 	Enabled     bool   `json:"enabled"`
 }
@@ -99,15 +98,9 @@ type (
 	}
 
 	UploadMapFileRequest {
+		GroupID int64 `path:"groupID"`
 	}
 	UploadMapFileResponse {
-		Code int    `json:"code"`
-		Msg  string `json:"msg"`
-	}
-
-	UploadMapFileNoVerifyRequest {
-	}
-	UploadMapFileNoVerifyResponse {
 		Code int    `json:"code"`
 		Msg  string `json:"msg"`
 	}
@@ -122,7 +115,7 @@ type (
 	}
 
 	EnablePluginRequest {
-		PluginIDs []int64 `json:"plugin_ids"`
+		PluginNames []string `json:"pluginNames"`
 	}
 	EnablePluginResponse {
 		Code int    `json:"code"`
@@ -130,7 +123,7 @@ type (
 	}
 
 	DisablePluginRequest {
-		PluginIDs []int64 `json:"plugin_ids"`
+		PluginNames []string `json:"pluginNames"`
 	}
 	DisablePluginResponse {
 		Code int    `json:"code"`
@@ -191,13 +184,7 @@ service l4d2 {
 		summary : "上传地图文件（带验证）"
 	)
 	@handler UploadMapFile
-	post /api/admin/map/upload/verify (UploadMapFileRequest) returns (UploadMapFileResponse)
-	
-	@doc(
-		summary : "上传地图文件（不带验证）"
-	)
-	@handler UploadMapFileNoVerify
-	post /api/admin/map/upload (UploadMapFileNoVerifyRequest) returns (UploadMapFileNoVerifyResponse)
+	post /api/admin/map/upload/:groupID (UploadMapFileRequest) returns (UploadMapFileResponse)
 	
 	@doc(
 		summary : "执行命令"

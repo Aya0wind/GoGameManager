@@ -2,6 +2,9 @@ package admin
 
 import (
 	"context"
+	"fmt"
+	"l4d2/service/l4d2/internal/logic/admin/utils"
+	"os"
 
 	"l4d2/service/l4d2/internal/svc"
 	"l4d2/service/l4d2/internal/types"
@@ -24,7 +27,38 @@ func NewDisablePluginLogic(ctx context.Context, svcCtx *svc.ServiceContext) Disa
 }
 
 func (l *DisablePluginLogic) DisablePlugin(req types.DisablePluginRequest) (resp *types.DisablePluginResponse, err error) {
-	// todo: add your logic here and delete this line
+	//collect all Name field in Plugins to a slice
+	var pluginNames []string
+	for _, plugin := range l.svcCtx.Plugins.Enabled {
+		pluginNames = append(pluginNames, plugin.Name)
+	}
 
+	needDisable := utils.Intersect(pluginNames, req.PluginNames)
+	if needDisable == nil {
+		resp = &types.DisablePluginResponse{
+			Code: 500,
+			Msg:  "disable plugin failed,not exist",
+		}
+		return
+	}
+	enablePath := l.svcCtx.Config.Path.PluginPath
+	disablePath := l.svcCtx.Config.Path.PluginPath + "/disabled/"
+	for _, pluginName := range needDisable {
+		enabledPluginPath := fmt.Sprintf("%s/%s.smx", enablePath, pluginName)
+		disablePluginPath := fmt.Sprintf("%s/%s.smx", disablePath, pluginName)
+		_ = os.Rename(enabledPluginPath, disablePluginPath)
+		//move plugin file from slice Enabled to slice Disabled
+		for i, plugin := range l.svcCtx.Plugins.Enabled {
+			if plugin.Name == pluginName {
+				l.svcCtx.Plugins.Disabled = append(l.svcCtx.Plugins.Disabled, plugin)
+				l.svcCtx.Plugins.Enabled = append(l.svcCtx.Plugins.Enabled[:i], l.svcCtx.Plugins.Enabled[i+1:]...)
+				break
+			}
+		}
+	}
+	resp = &types.DisablePluginResponse{
+		Code: 200,
+		Msg:  "ok",
+	}
 	return
 }

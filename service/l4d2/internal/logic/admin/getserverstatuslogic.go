@@ -2,7 +2,7 @@ package admin
 
 import (
 	"context"
-	"l4d2/service/l4d2/internal/logic/admin/impl"
+	"l4d2/service/l4d2/internal/logic/admin/utils"
 	"net/http"
 
 	"l4d2/service/l4d2/internal/svc"
@@ -26,7 +26,7 @@ func NewGetServerStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) Ge
 }
 
 func (l *GetServerStatusLogic) GetServerStatus(req types.GetServerStatusRequest) (resp *types.GetServerStatusResponse, err error) {
-	result, err := impl.ExecRconCommand(&l.svcCtx.Config.Rcon, "status")
+	result, err := utils.ExecRconCommand(&l.svcCtx.Config.Rcon, "status")
 	if err != nil {
 		resp = &types.GetServerStatusResponse{
 			Code: http.StatusBadRequest,
@@ -35,7 +35,7 @@ func (l *GetServerStatusLogic) GetServerStatus(req types.GetServerStatusRequest)
 		err = nil
 		return
 	}
-	info := impl.ParseServerInfo(result)
+	info := utils.ParseServerInfo(result)
 	resp = &types.GetServerStatusResponse{
 		Code: http.StatusOK,
 		Msg:  "ok",

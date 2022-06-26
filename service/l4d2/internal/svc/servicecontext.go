@@ -11,10 +11,10 @@ import (
 )
 
 type ServiceContext struct {
-	Config       config.Config
-	Db           model.L4D2Model
-	LocalPlugins PluginManager
-	Templates    []types.CommandTemplate
+	Config    config.Config
+	Db        model.L4D2Model
+	Plugins   PluginManager
+	Templates []types.CommandTemplate
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -35,21 +35,21 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		panic(err)
 	}
-	var templates []types.CommandTemplate
+	templates := make([]types.CommandTemplate, 0)
 	err = yaml.Unmarshal(file, &templates)
 	if err != nil {
 		panic(err)
 	}
-
-	PluginManager := PluginManager{}
-
-	PluginManager.readDirPlugins(c.Path.PluginPath)
-
+	plugins, err := InitFromPluginDirectory(&c)
+	if err != nil {
+		panic(err)
+	}
 	return &ServiceContext{
 		Config: c,
 		Db: model.L4D2Model{
 			Db: Db,
 		},
 		Templates: templates,
+		Plugins:   plugins,
 	}
 }

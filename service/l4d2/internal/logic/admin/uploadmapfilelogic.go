@@ -3,14 +3,14 @@ package admin
 import (
 	"context"
 	"database/sql"
-	"l4d2/service/l4d2/internal/logic/admin/impl"
-	"l4d2/service/l4d2/internal/logic/admin/impl/vdfparser"
+	"fmt"
+	"l4d2/service/l4d2/internal/logic/admin/utils"
+	"l4d2/service/l4d2/internal/logic/admin/utils/vdfparser"
 	"l4d2/service/l4d2/internal/svc"
 	"l4d2/service/l4d2/internal/types"
 	"l4d2/service/l4d2/model"
 	"mime/multipart"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -30,21 +30,14 @@ func NewUploadMapFileLogic(ctx context.Context, svcCtx *svc.ServiceContext) Uplo
 	}
 }
 
-func (l *UploadMapFileLogic) UploadMapFile(fileHeaders []*multipart.FileHeader, groupID int64) (resp *types.UploadMapFileResponse, err error) {
-	if len(fileHeaders) != 1 {
-		resp = &types.UploadMapFileResponse{
-			Code: http.StatusBadRequest,
-			Msg:  err.Error(),
-		}
-		return
-	}
+func (l *UploadMapFileLogic) UploadMapFile(req types.UploadMapFileRequest, fileHeaders []*multipart.FileHeader) (resp *types.UploadMapFileResponse, err error) {
+	groupID := req.GroupID
 	for _, file := range fileHeaders {
-		path := l.svcCtx.Config.Path.VpkPath + file.Filename
-		_, err = os.Stat(path)
-		if os.IsExist(err) {
+		path := fmt.Sprintf("%s/%s", l.svcCtx.Config.Path.VpkPath, file.Filename)
+		if utils.IsExist(path) {
 			continue
 		}
-		err = impl.SaveMultipartFile(file, path)
+		err = utils.SaveMultipartFile(file, path)
 		if err != nil {
 			resp = &types.UploadMapFileResponse{
 				Code: http.StatusBadRequest,

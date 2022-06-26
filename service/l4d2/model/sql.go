@@ -69,10 +69,7 @@ func (receiver *L4D2Model) UpdateMapGroupPlayTime(id int64) (err error) {
 //地图文件相关数据库查询
 
 func (receiver *L4D2Model) QueryMapFileByMapGroupID(id int64) (files []MapFile, err error) {
-	d := receiver.Db.Find(&files, "groupId = ?", id)
-	if d.Error != nil {
-		return nil, d.Error
-	}
+	err = receiver.Db.Find(&files, "groupId = ?", id).Error
 	return
 }
 

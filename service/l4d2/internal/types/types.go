@@ -36,7 +36,7 @@ type User struct {
 }
 
 type Plugin struct {
-	FileName    string `json:"fileName"`
+	Name        string `json:"name"`
 	Description string `json:"description"`
 	Enabled     bool   `json:"enabled"`
 }
@@ -105,17 +105,10 @@ type DeleteMapGroupByIDResponse struct {
 }
 
 type UploadMapFileRequest struct {
+	GroupID int64 `path:"groupID"`
 }
 
 type UploadMapFileResponse struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-}
-
-type UploadMapFileNoVerifyRequest struct {
-}
-
-type UploadMapFileNoVerifyResponse struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 }
@@ -131,7 +124,7 @@ type ExecuteCommandResponse struct {
 }
 
 type EnablePluginRequest struct {
-	PluginIDs []int64 `json:"plugin_ids"`
+	PluginNames []string `json:"pluginNames"`
 }
 
 type EnablePluginResponse struct {
@@ -140,7 +133,7 @@ type EnablePluginResponse struct {
 }
 
 type DisablePluginRequest struct {
-	PluginIDs []int64 `json:"plugin_ids"`
+	PluginNames []string `json:"pluginNames"`
 }
 
 type DisablePluginResponse struct {

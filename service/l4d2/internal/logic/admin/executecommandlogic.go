@@ -2,7 +2,7 @@ package admin
 
 import (
 	"context"
-	"l4d2/service/l4d2/internal/logic/admin/impl"
+	"l4d2/service/l4d2/internal/logic/admin/utils"
 	"net/http"
 
 	"l4d2/service/l4d2/internal/svc"
@@ -26,7 +26,7 @@ func NewExecuteCommandLogic(ctx context.Context, svcCtx *svc.ServiceContext) Exe
 }
 
 func (l *ExecuteCommandLogic) ExecuteCommand(req types.ExecuteCommandRequest) (resp *types.ExecuteCommandResponse, err error) {
-	result, err := impl.ExecRconCommand(&l.svcCtx.Config.Rcon, req.Command)
+	result, err := utils.ExecRconCommand(&l.svcCtx.Config.Rcon, req.Command)
 	l.Logger.Info(result)
 	if err != nil {
 		resp = &types.ExecuteCommandResponse{
@@ -39,6 +39,7 @@ func (l *ExecuteCommandLogic) ExecuteCommand(req types.ExecuteCommandRequest) (r
 	resp = &types.ExecuteCommandResponse{
 		Code: http.StatusOK,
 		Msg:  "ok",
+		Data: result,
 	}
 	return
 }

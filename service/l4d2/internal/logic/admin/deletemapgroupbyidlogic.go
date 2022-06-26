@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -29,7 +30,10 @@ func (l *DeleteMapGroupByIDLogic) DeleteMapGroupByID(req types.DeleteMapGroupByI
 	needDeleteFiles, err := l.svcCtx.Db.DeleteMapGroupAndFilesByID(req.ID)
 	//删除所有地图文件
 	for _, file := range needDeleteFiles {
-		_ = os.Remove(l.svcCtx.Config.Path.VpkPath + file.FileName)
+		err = os.Remove(fmt.Sprintf("%s/%s", l.svcCtx.Config.Path.VpkPath, file.FileName))
+		if err != nil {
+			l.Logger.Error(err)
+		}
 	}
 	if err != nil {
 		resp = &types.DeleteMapGroupByIDResponse{

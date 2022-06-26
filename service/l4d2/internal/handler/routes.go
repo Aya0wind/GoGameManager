@@ -46,13 +46,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/admin/map/upload/verify",
+				Path:    "/api/admin/map/upload/:groupID",
 				Handler: admin.UploadMapFileHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/api/admin/map/upload",
-				Handler: admin.UploadMapFileNoVerifyHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

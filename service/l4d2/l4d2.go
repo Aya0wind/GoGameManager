@@ -32,5 +32,6 @@ func main() {
 		Encoding: "plain",
 	})
 	rest.WithCors("*")(server)
+
 	server.Start()
 }

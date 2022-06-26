@@ -8,37 +8,62 @@ import (
 )
 
 type LocalPlugin struct {
-	FileName    string `json:"fileName"`
 	Description string `json:"description"`
+	Name        string `json:"name"`
 }
 
 type PluginManager struct {
-	Disabled []LocalPlugin
-	Enabled  []LocalPlugin
+	Disabled []LocalPlugin `json:"disabled"`
+	Enabled  []LocalPlugin `json:"enabled"`
 }
 
-func (receiver *PluginManager) InitFromPluginDirectory(c *config.Config) error {
-	var err error
+func InitFromPluginDirectory(c *config.Config) (manager PluginManager, err error) {
 	disabledFiles, err := readDirPlugins(c.Path.PluginPath + "/disabled")
 	if err != nil {
-		return err
+		return
 	}
 	enabledFiles, err := readDirPlugins(c.Path.PluginPath)
 	if err != nil {
-		return err
+		return
 	}
-	file, err := ioutil.ReadFile(c.Path.PluginDescriptionPath)
+	fileBytes, err := ioutil.ReadFile(c.Path.PluginDescriptionPath)
 	if err != nil {
-		return err
+		return
 	}
-
-	var pluginDescriptions []LocalPlugin
-	err = yaml.Unmarshal(file, &pluginDescriptions)
+	var localPlugins map[string]LocalPlugin
+	err = yaml.Unmarshal(fileBytes, &localPlugins)
 	if err != nil {
-		panic(err)
+		return
 	}
-
-	return nil
+	for _, file := range disabledFiles {
+		name := strings.TrimSuffix(file, ".smx")
+		if localPlugin, exist := localPlugins[name]; exist {
+			manager.Disabled = append(manager.Disabled, LocalPlugin{
+				Description: localPlugin.Description,
+				Name:        name,
+			})
+		} else {
+			manager.Disabled = append(manager.Disabled, LocalPlugin{
+				Description: "暂无说明",
+				Name:        name,
+			})
+		}
+	}
+	for _, file := range enabledFiles {
+		name := strings.TrimSuffix(file, ".smx")
+		if localPlugin, exist := localPlugins[name]; exist {
+			manager.Enabled = append(manager.Enabled, LocalPlugin{
+				Description: localPlugin.Description,
+				Name:        name,
+			})
+		} else {
+			manager.Enabled = append(manager.Enabled, LocalPlugin{
+				Description: "暂无说明",
+				Name:        name,
+			})
+		}
+	}
+	return
 }
 
 func readDirPlugins(pathPrefix string) ([]string, error) {

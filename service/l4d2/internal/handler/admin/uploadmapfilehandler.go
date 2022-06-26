@@ -1,13 +1,11 @@
 package admin
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"l4d2/service/l4d2/internal/logic/admin"
 	"l4d2/service/l4d2/internal/svc"
 	"l4d2/service/l4d2/internal/types"
+	"net/http"
 )
 
 func UploadMapFileHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -18,20 +16,8 @@ func UploadMapFileHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 		fileHeader := r.MultipartForm.File["file"]
-		groupIDHeader := r.Header["Group-ID"]
-		var groupID int64
-		if len(groupIDHeader) == 0 {
-			groupID = 0
-		} else {
-			number, err := strconv.ParseInt(groupIDHeader[0], 10, 64)
-			groupID = number
-			if err != nil {
-				httpx.Error(w, err)
-				return
-			}
-		}
 		l := admin.NewUploadMapFileLogic(r.Context(), svcCtx)
-		resp, err := l.UploadMapFile(fileHeader, groupID)
+		resp, err := l.UploadMapFile(req, fileHeader)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

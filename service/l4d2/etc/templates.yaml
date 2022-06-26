@@ -2,22 +2,32 @@
   description: '更换服务器地图为指定地图（战役模式）'
   params:
   - '地图名称'
-  command: 'map $1'
+  command: 'map $'
+
+- name: '查看服务器信息'
+  description: '查看服务器信息'
+  params: []
+  command: 'status'
 
 - name: '更换地图（写实模式）'
   description: '更换服务器地图为指定地图（写实模式）'
   params:
     - '地图名称'
-  command: 'map $1 realism'
+    - '写实参数'
+    - '地图名称'
+    - '写实参数'
+    - '地图名称'
+    - '写实参数'
+  command: 'map $ $ $ $ $ $'
 
 - name: '给予玩家权限'
   description: '给予玩家指定权限'
   params:
     - '权限码'
-  command: 'map $1 realism'
+  command: 'map $ realism'
 
 - name: '封禁玩家'
   description: '封禁指定玩家'
   params:
     - '玩家名称'
-  command: 'map $1 realism'
+  command: 'map $ realism'

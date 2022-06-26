@@ -34,7 +34,7 @@ func (l *GetMapFilesByGroupIDLogic) GetMapFilesByGroupID(req types.GetMapFilesBy
 		err = nil
 		return
 	}
-	var mapFilesResp []types.MapFile
+	mapFilesResp := make([]types.MapFile, 0)
 	for _, mapFile := range mapFiles {
 		mapFilesResp = append(mapFilesResp, types.MapFile{
 			Id:        mapFile.Id,

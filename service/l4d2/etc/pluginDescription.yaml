@@ -1,6 +1,6 @@
-- fileName: 'aaa.smx'
-  description: 'aaa'
-- fileName: 'bbb.smx'
-  description: 'aaa'
-- fileName: 'ccc.smx'
-  description: 'aaa'
+aaa:
+  description: '插件1'
+bbb:
+  description: '插件2'
+ccc:
+  description: '插件3'
