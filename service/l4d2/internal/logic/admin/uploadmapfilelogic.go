@@ -4,16 +4,15 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"l4d2/service/l4d2/internal/logic/admin/utils"
-	"l4d2/service/l4d2/internal/logic/admin/utils/vdfparser"
+	"github.com/zeromicro/go-zero/core/logx"
+	"l4d2/common"
+	"l4d2/common/vdfparser"
 	"l4d2/service/l4d2/internal/svc"
 	"l4d2/service/l4d2/internal/types"
 	"l4d2/service/l4d2/model"
 	"mime/multipart"
 	"net/http"
 	"time"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type UploadMapFileLogic struct {
@@ -34,11 +33,12 @@ func (l *UploadMapFileLogic) UploadMapFile(req types.UploadMapFileRequest, fileH
 	groupID := req.GroupID
 	for _, file := range fileHeaders {
 		path := fmt.Sprintf("%s/%s", l.svcCtx.Config.Path.VpkPath, file.Filename)
-		if utils.IsExist(path) {
+		if common.IsExist(path) {
 			continue
 		}
-		err = utils.SaveMultipartFile(file, path)
+		err = common.SaveMultipartFile(file, path)
 		if err != nil {
+			l.Logger.Error(err)
 			resp = &types.UploadMapFileResponse{
 				Code: http.StatusBadRequest,
 				Msg:  err.Error(),
@@ -75,6 +75,7 @@ func (l *UploadMapFileLogic) UploadMapFile(req types.UploadMapFileRequest, fileH
 		}
 		err = l.svcCtx.Db.InsertMapGroupAndMapFile(mapGroup, file.Filename)
 		if err != nil {
+			l.Logger.Error(err)
 			resp = &types.UploadMapFileResponse{
 				Code: http.StatusBadRequest,
 				Msg:  err.Error(),

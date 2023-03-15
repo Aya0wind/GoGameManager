@@ -1,0 +1,5 @@
+nginx/
+deploy/
+logs/
+.idea/
+service/l4d2/etc/l4d2.yaml

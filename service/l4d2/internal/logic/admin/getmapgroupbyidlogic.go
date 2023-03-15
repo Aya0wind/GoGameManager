@@ -27,6 +27,7 @@ func NewGetMapGroupByIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) Ge
 func (l *GetMapGroupByIDLogic) GetMapGroupByID(req types.GetMapGroupByIDRequest) (resp *types.GetMapGroupByIDResponse, err error) {
 	mapGroup, err := l.svcCtx.Db.QueryMapGroupByID(req.ID)
 	if err != nil {
+		l.Logger.Error(err)
 		resp = &types.GetMapGroupByIDResponse{
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),

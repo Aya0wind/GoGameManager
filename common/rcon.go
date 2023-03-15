@@ -1,12 +1,17 @@
-package utils
+package common
 
 import (
 	"fmt"
 	"github.com/james4k/rcon"
-	"l4d2/service/l4d2/internal/config"
 )
 
-func ExecRconCommand(config *config.RconConfig, cmd string) (string, error) {
+type RconConfig struct {
+	Ip       string `json:"ip"`
+	Port     uint16 `json:"port"`
+	Password string `json:"password"`
+}
+
+func ExecRconCommand(config *RconConfig, cmd string) (string, error) {
 	ip := config.Ip
 	port := config.Port
 	password := config.Password

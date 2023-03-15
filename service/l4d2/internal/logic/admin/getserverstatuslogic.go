@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"l4d2/common"
 	"l4d2/service/l4d2/internal/logic/admin/utils"
 	"net/http"
 
@@ -25,9 +26,10 @@ func NewGetServerStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) Ge
 	}
 }
 
-func (l *GetServerStatusLogic) GetServerStatus(req types.GetServerStatusRequest) (resp *types.GetServerStatusResponse, err error) {
-	result, err := utils.ExecRconCommand(&l.svcCtx.Config.Rcon, "status")
+func (l *GetServerStatusLogic) GetServerStatus(_ types.GetServerStatusRequest) (resp *types.GetServerStatusResponse, err error) {
+	result, err := common.ExecRconCommand(&l.svcCtx.Config.Rcon, "status")
 	if err != nil {
+		l.Logger.Error(err)
 		resp = &types.GetServerStatusResponse{
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),

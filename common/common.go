@@ -1,8 +1,8 @@
-package utils
+package common
 
 import "os"
 
-// Intersect two slice intersect
+// Intersect two slice
 func Intersect(a, b []string) []string {
 	m := make(map[string]bool)
 	for _, item := range a {

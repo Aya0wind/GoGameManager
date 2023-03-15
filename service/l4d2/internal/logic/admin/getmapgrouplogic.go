@@ -24,10 +24,10 @@ func NewGetMapGroupLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetMap
 	}
 }
 
-func (l *GetMapGroupLogic) GetMapGroup(req types.GetMapGroupRequest) (resp *types.GetMapGroupResponse, err error) {
+func (l *GetMapGroupLogic) GetMapGroup(_ types.GetMapGroupRequest) (resp *types.GetMapGroupResponse, err error) {
 	mapGroups, err := l.svcCtx.Db.QueryAllMapGroup()
-	l.Logger.Info(mapGroups)
 	if err != nil {
+		l.Logger.Error(err)
 		resp = &types.GetMapGroupResponse{
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
@@ -37,7 +37,6 @@ func (l *GetMapGroupLogic) GetMapGroup(req types.GetMapGroupRequest) (resp *type
 	}
 	MapGroups := make([]types.MapGroup, 0)
 	for _, mapGroup := range mapGroups {
-		l.Logger.Info(mapGroup)
 		var data types.MapGroup
 		data.Id = mapGroup.Id
 		data.UpdatedAt = mapGroup.UpdatedTime

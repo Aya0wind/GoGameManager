@@ -1,0 +1,18 @@
+Name: l4d2
+Host: 0.0.0.0
+Port: 8888
+rcon:
+  ip:
+  port: 45000
+  password: 123456
+MaxBytes: 0
+database:
+  dataBaseUrl: 'root@tcp(127.0.0.1:3306)/l4d2?charset=utf8&parseTime=True'
+path:
+  vpkPath: '../../vpk'
+  pluginPath: '../../vpk'
+  commandTemplatePath: 'etc/templates.yaml'
+  pluginDescriptionPath: 'etc/pluginDescription.yaml'
+AdminAuth:
+  AccessSecret: 'secret'
+  AccessExpire: 200000

@@ -27,6 +27,7 @@ func NewGetMapFilesByGroupIDLogic(ctx context.Context, svcCtx *svc.ServiceContex
 func (l *GetMapFilesByGroupIDLogic) GetMapFilesByGroupID(req types.GetMapFilesByGroupIDRequest) (resp *types.GetMapFilesByGroupIDResponse, err error) {
 	mapFiles, err := l.svcCtx.Db.QueryMapFileByMapGroupID(req.ID)
 	if err != nil {
+		l.Logger.Error(err)
 		resp = &types.GetMapFilesByGroupIDResponse{
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),

@@ -1,4 +1,4 @@
-package utils
+package common
 
 import (
 	"bufio"
@@ -10,7 +10,12 @@ func SaveMultipartFile(file *multipart.FileHeader, filePath string) (err error) 
 	httpFile, err := file.Open()
 	reader := bufio.NewReader(httpFile)
 	localFile, err := os.Create(filePath)
-	defer localFile.Close()
+	defer func(localFile *os.File) {
+		err := localFile.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(localFile)
 	if err != nil {
 		return
 	}

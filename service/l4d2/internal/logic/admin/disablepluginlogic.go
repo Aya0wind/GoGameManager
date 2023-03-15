@@ -3,7 +3,7 @@ package admin
 import (
 	"context"
 	"fmt"
-	"l4d2/service/l4d2/internal/logic/admin/utils"
+	"l4d2/common"
 	"os"
 
 	"l4d2/service/l4d2/internal/svc"
@@ -33,8 +33,9 @@ func (l *DisablePluginLogic) DisablePlugin(req types.DisablePluginRequest) (resp
 		pluginNames = append(pluginNames, plugin.Name)
 	}
 
-	needDisable := utils.Intersect(pluginNames, req.PluginNames)
+	needDisable := common.Intersect(pluginNames, req.PluginNames)
 	if needDisable == nil {
+		l.Logger.Error(err)
 		resp = &types.DisablePluginResponse{
 			Code: 500,
 			Msg:  "disable plugin failed,not exist",

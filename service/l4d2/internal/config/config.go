@@ -2,13 +2,8 @@ package config
 
 import (
 	"github.com/zeromicro/go-zero/rest"
+	"l4d2/common"
 )
-
-type RconConfig struct {
-	Ip       string `json:"ip"`
-	Port     uint16 `json:"port"`
-	Password string `json:"password"`
-}
 
 type DataBaseConfig struct {
 	DataBaseUrl string `json:"dataBaseUrl"`
@@ -23,9 +18,9 @@ type PathConfig struct {
 
 type Config struct {
 	rest.RestConf
-	Rcon      RconConfig     `json:"rcon"`
-	DataBase  DataBaseConfig `json:"database"`
-	Path      PathConfig     `json:"path"`
+	Rcon      common.RconConfig `json:"rcon"`
+	DataBase  DataBaseConfig    `json:"database"`
+	Path      PathConfig        `json:"path"`
 	AdminAuth struct {
 		AccessSecret string
 		AccessExpire int64

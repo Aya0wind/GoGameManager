@@ -1,6 +1,6 @@
 module l4d2
 
-go 1.18
+go 1.17
 
 require (
 	github.com/BenLubar/vpk v0.0.0-20190906201114-06714991d55b

@@ -3,7 +3,7 @@ package admin
 import (
 	"context"
 	"fmt"
-	"l4d2/service/l4d2/internal/logic/admin/utils"
+	"l4d2/common"
 	"os"
 
 	"l4d2/service/l4d2/internal/svc"
@@ -33,8 +33,9 @@ func (l *EnablePluginLogic) EnablePlugin(req types.EnablePluginRequest) (resp *t
 	for _, plugin := range l.svcCtx.Plugins.Disabled {
 		pluginNames = append(pluginNames, plugin.Name)
 	}
-	needEnable := utils.Intersect(pluginNames, req.PluginNames)
+	needEnable := common.Intersect(pluginNames, req.PluginNames)
 	if needEnable == nil {
+		l.Logger.Error(err)
 		resp = &types.EnablePluginResponse{
 			Code: 500,
 			Msg:  "enable plugin failed,not exist",
