@@ -2,7 +2,7 @@ package vdfparser
 
 import (
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"sort"
 	"strconv"
@@ -88,7 +88,7 @@ func ParseVpkMapFileInfo(path string) (info []VpkInfo, err error) {
 	if err != nil {
 		return
 	}
-	bytes, err := ioutil.ReadAll(file)
+	bytes, err := io.ReadAll(file)
 	if err != nil {
 		return
 	}
